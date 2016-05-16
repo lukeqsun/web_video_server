@@ -52,6 +52,15 @@ void ImageTransportImageStreamer::imageCallback(const sensor_msgs::ImageConstPtr
         float_image *= (255 / max_val);
       }
       img = float_image;
+    } else if (msg->encoding.find("16UC1") != std::string::npos) {
+      cv::Mat depth_msg = cv_bridge::toCvCopy(msg, "32FC1")->image;
+
+      // scale floating point images
+      cv::Mat_<float> float_image = depth_msg;
+      double max_val = 10000;
+      float_image *= (255 / max_val);
+
+      img = float_image;
     }
     else
     {
